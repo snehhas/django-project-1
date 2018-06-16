@@ -15,13 +15,8 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from django.conf.urls import url
-from django.contrib.auth import views as auth_views
 
 urlpatterns = [
-    # url(r'^login/', auth_views.login, name='login'),
-    url(r'^login/$', auth_views.login, {'template_name': 'registration/login.html'}, name='login'),
-    # url(r'^logout/$', auth_views.logout, name='logout'),
-    url(r'^logout/$', auth_views.logout, {'next_page': '/'}, name='logout'),
-    url(r'^admin/', admin.site.urls),
+    path('accounts/', include('django.contrib.auth.urls')),
+    path('admin/', admin.site.urls),
 ]
