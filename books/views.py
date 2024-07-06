@@ -3,8 +3,12 @@ from .models import BookForm, Book, BorrowedBook
 from django.contrib.auth.decorators import login_required
 
 def book_list(request):
-    books = Book.objects.all()
-    return render(request, 'books/book_list.html', {'books': books})
+    query = request.GET.get('q')
+    if query:
+        books = Book.objects.filter(title__icontains=query)
+    else:
+        books = Book.objects.all()
+    return render(request, 'books/book_list.html', {'books': books, 'query': query})
 
 def book_add(request):
     if request.method == 'POST':
