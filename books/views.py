@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import BookForm, Book
+from .models import BookForm, Book, BorrowedBook
+from django.contrib.auth.decorators import login_required
 
 def book_list(request):
     books = Book.objects.all()
@@ -25,3 +26,10 @@ def book_edit(request, pk):
     else:
         form = BookForm(instance=book)
     return render(request, 'books/book_form.html', {'form': form})
+
+@login_required
+def borrow_book(request, book_id):
+    book = get_object_or_404(Book, pk=book_id)
+    # Create a BorrowedBook record
+    borrowed_book = BorrowedBook.objects.create(user=request.user, book=book)
+    return redirect('book_list')

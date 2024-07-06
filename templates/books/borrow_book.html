@@ -1,8 +1,8 @@
-<!-- templates/books/book_list.html -->
+<!-- templates/books/borrowed_books.html -->
 {% extends 'base.html' %}
 
 {% block title %}
-  Book Inventory
+  Borrowed Books
 {% endblock %}
 
 {% block content %}
@@ -18,18 +18,13 @@
             <a class="nav-link active" aria-current="page" href="{% url 'user_list' %}">Members</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">Books</a>
+            <a class="nav-link" href="{% url 'book_list' %}">Books</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">Loan</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Return</a>
+            <a class="nav-link" href="{% url 'borrowed_books' %}">Borrowed Books</a>
           </li>
         </ul>
         <form class="d-flex">
-          <!-- <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-          <button class="btn btn-outline-success" type="submit">Search</button> -->
           <ul class="nav navbar-nav navbar-right">
             <li><a href="{% url 'logout' %}">Logout</a></li>
           </ul>
@@ -39,45 +34,37 @@
   </nav>
 
 <div class="container mt-4">
-  <h1>Book Inventory</h1>
+  <h1>Borrowed Books</h1>
 
   <table class="table">
     <thead>
       <tr>
         <th>Title</th>
         <th>Author</th>
-        <th>Published Date</th>
-        <th>ISBN</th>
+        <th>Borrowed Date</th>
         <th>Action</th>
       </tr>
     </thead>
     <tbody>
-      {% for book in books %}
+      {% for borrowed_book in borrowed_books %}
       <tr>
-        <td>{{ book.title }}</td>
-        <td>{{ book.author }}</td>
-        <td>{{ book.published_date }}</td>
-        <td>{{ book.isbn }}</td>
+        <td>{{ borrowed_book.book.title }}</td>
+        <td>{{ borrowed_book.book.author }}</td>
+        <td>{{ borrowed_book.borrowed_date }}</td>
         <td>
-          {% if user.is_authenticated %}
-            <form action="{% url 'borrow_book' book.pk %}" method="post">
-              {% csrf_token %}
-              <button type="submit" class="btn btn-primary">Loan</button>
-            </form>
-          {% else %}
-            <span class="text-muted">Login required</span>
-          {% endif %}
+          <form action="{% url 'borrow_book' borrowed_book.book.isbn %}" method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-secondary">Return</button>
+          </form>
         </td>
       </tr>
       {% empty %}
       <tr>
-        <td colspan="5">No books found.</td>
+        <td colspan="4">No borrowed books found.</td>
       </tr>
       {% endfor %}
     </tbody>
   </table>
-
-  <a href="{% url 'book_add' %}" class="btn btn-primary">Add New Book</a>
 </div>
 
 {% endblock %}
