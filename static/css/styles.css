@@ -2,3 +2,7 @@
     background-color: #f8f9fa;
   }
   
+/* style.css */
+.navbar-nav {
+  flex-direction: row; /* Ensure navbar items are displayed horizontally */
+}
