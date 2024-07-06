@@ -1,12 +1,67 @@
-<!-- templates/books/book_list.html -->
-<h1>Book Inventory</h1>
+{% extends 'base.html' %}
 
-<ul>
-    {% for book in books %}
-    <li>{{ book.title }} by {{ book.author }}</li>
-    {% empty %}
-    <li>No books found.</li>
-    {% endfor %}
-</ul>
+{% block content %}
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="{% url 'home' %}"><b>LMS Portal</b></a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="#"></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'book_list' %}">Books</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Loan</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Return</a>
+          </li>
+        </ul>
+        <form class="d-flex">
+          <!-- <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+          <button class="btn btn-outline-success" type="submit">Search</button> -->
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="{% url 'logout' %}">Logout</a></li>
+          </ul>
+        </form>
+      </div>
+    </div>
+  </nav>
 
-<a href="{% url 'book_add' %}">Add New Book</a>
+<div class="container mt-4">
+  <h1>Book Inventory</h1>
+
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Title</th>
+        <th>Author</th>
+        <th>Published Date</th>
+        <th>ISBN</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for book in books %}
+      <tr>
+        <td>{{ book.title }}</td>
+        <td>{{ book.author }}</td>
+        <td>{{ book.published_date }}</td>
+        <td>{{ book.isbn }}</td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td colspan="4">No books found.</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <a href="{% url 'book_add' %}" class="btn btn-primary">Add New Book</a>
+</div>
+
+{% endblock %}
