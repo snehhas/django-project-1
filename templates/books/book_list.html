@@ -24,13 +24,16 @@
             <a class="nav-link" href="{% url 'borrowed_books_list' %}">Return Book</a>
           </li>
         </ul>
-        <form class="d-flex">
-          <!-- <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-          <button class="btn btn-outline-success" type="submit">Search</button> -->
-          <ul class="nav navbar-nav navbar-right">
-            <li><a href="{% url 'logout' %}">Logout</a></li>
-          </ul>
+        <form class="d-flex" method="GET" action="{% url 'book_list' %}">
+          <input class="form-control me-2" type="search" name="q" placeholder="Search by Title" aria-label="Search" value="{{ query|default_if_none:"" }}">
+          <button class="btn btn-outline-success" type="submit">Search</button>
+          {% if query %}
+          <button class="btn btn-outline-secondary btn-sm"><a href="{% url 'book_list' %}">Clear Search</a></button>
+          {% endif %}
         </form>
+        <ul class="nav navbar-nav navbar-right">
+          <li><a href="{% url 'logout' %}">Logout</a></li>
+        </ul>
       </div>
     </div>
   </nav>
@@ -49,28 +52,34 @@
       </tr>
     </thead>
     <tbody>
-      {% for book in books %}
-      <tr>
-        <td>{{ book.title }}</td>
-        <td>{{ book.author }}</td>
-        <td>{{ book.published_date }}</td>
-        <td>{{ book.isbn }}</td>
-        <td>
-          {% if user.is_authenticated %}
-            <form action="{% url 'borrow_book' book.pk %}" method="post">
-              {% csrf_token %}
-              <button type="submit" class="btn btn-primary">Loan</button>
-            </form>
-          {% else %}
-            <span class="text-muted">Login required</span>
-          {% endif %}
-        </td>
-      </tr>
-      {% empty %}
+      {% if books %}
+        {% for book in books %}
+        <tr>
+          <td>{{ book.title }}</td>
+          <td>{{ book.author }}</td>
+          <td>{{ book.published_date }}</td>
+          <td>{{ book.isbn }}</td>
+          <td>
+            {% if user.is_authenticated %}
+              <form action="{% url 'borrow_book' book.pk %}" method="post">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-primary">Loan</button>
+              </form>
+            {% else %}
+              <span class="text-muted">Login required</span>
+            {% endif %}
+          </td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="5">No books found.</td>
+        </tr>
+        {% endfor %}
+      {% else %}
       <tr>
         <td colspan="5">No books found.</td>
       </tr>
-      {% endfor %}
+      {% endif %}
     </tbody>
   </table>
 
