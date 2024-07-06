@@ -1,6 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import BookForm
-from .models import Book
+from .models import BookForm, Book
 
 def book_list(request):
     books = Book.objects.all()
