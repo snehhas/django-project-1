@@ -63,10 +63,11 @@
           <td>{{ book.isbn }}</td>
           <td>
             {% if user.is_authenticated %}
-              <form action="{% url 'borrow_book' book.pk %}" method="post">
+            <form action="{% url 'borrow_book' book.pk %}" method="post">
                 {% csrf_token %}
+                <input type="hidden" name="book_id" value="{{ book.pk }}">
                 <button type="submit" class="btn btn-primary">Loan</button>
-              </form>
+            </form>
             {% else %}
               <span class="text-muted">Login required</span>
             {% endif %}
