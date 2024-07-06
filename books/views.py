@@ -33,3 +33,14 @@ def borrow_book(request, book_id):
     # Create a BorrowedBook record
     borrowed_book = BorrowedBook.objects.create(user=request.user, book=book)
     return redirect('book_list')
+
+@login_required
+def borrowed_books_list(request):
+    borrowed_books = BorrowedBook.objects.all()
+    return render(request, 'books/borrowed_books_list.html', {'borrowed_books': borrowed_books})
+
+@login_required
+def return_book(request, borrowed_book_id):
+    borrowed_book = get_object_or_404(BorrowedBook, id=borrowed_book_id)
+    borrowed_book.delete()
+    return redirect('borrowed_books_list')
