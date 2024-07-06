@@ -9,6 +9,10 @@ class Book(models.Model):
     author = models.CharField(max_length=255)
     published_date = models.DateField()
     isbn = models.CharField(max_length=13)
+    copies_available = models.IntegerField(default=5)
+
+    def __str__(self):
+        return self.title
     # Add more fields as needed
 
 class BookForm(forms.ModelForm):
