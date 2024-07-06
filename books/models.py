@@ -1,6 +1,7 @@
 from django.db import models
 from django import forms
 from django.contrib.auth.models import User
+from datetime import timedelta, datetime
 from django.utils import timezone
 
 class Book(models.Model):
@@ -44,6 +45,9 @@ class BorrowedBook(models.Model):
             # Calculate fine amount (e.g., Rs. 5 per day)
             overdue_days = (timezone.now() - (self.borrowed_date + timezone.timedelta(days=7))).days
             fine_amount = overdue_days * 5  # Rs. 5 per day
-            return fine_amount
+            if fine_amount > 0:
+                return fine_amount
+            else:
+                return 0
         else:
             return 0  # No fine if not overdue
