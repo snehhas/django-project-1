@@ -47,6 +47,7 @@
         <th>Title</th>
         <th>Author</th>
         <th>Published Date</th>
+        <th>Copies</th>
         <th>ISBN</th>
         <th>Action</th>
       </tr>
@@ -58,6 +59,7 @@
           <td>{{ book.title }}</td>
           <td>{{ book.author }}</td>
           <td>{{ book.published_date }}</td>
+          <td>{{ book.copies_available }}</td>
           <td>{{ book.isbn }}</td>
           <td>
             {% if user.is_authenticated %}
