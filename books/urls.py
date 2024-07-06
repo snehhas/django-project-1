@@ -8,5 +8,8 @@ urlpatterns = [
     path('borrow/<int:book_id>/', views.borrow_book, name='borrow_book'),
     path('borrowed_books/', views.borrowed_books_list, name='borrowed_books_list'),
     path('return/<int:borrowed_book_id>/', views.return_book, name='return_book'),
+    path('books/reserve/<int:book_id>/', views.reserve_book, name='reserve_book'),
+    path('reserve/', views.reserve_view, name='reserve_view'),
+    path('loan-book/<int:reservation_id>/', views.loan_book, name='loan_book'),
     # Add more URLs as needed
 ]

@@ -10,6 +10,7 @@ class Book(models.Model):
     published_date = models.DateField()
     isbn = models.CharField(max_length=13)
     copies_available = models.IntegerField(default=5)
+    is_reserved = models.BooleanField(default=False)
 
     def __str__(self):
         return self.title
@@ -55,3 +56,22 @@ class BorrowedBook(models.Model):
                 return 0
         else:
             return 0  # No fine if not overdue
+        
+class Reservation(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    book = models.ForeignKey(Book, on_delete=models.CASCADE)
+    reserved_date = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('user', 'book')
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        self.book.save()
+
+    def delete(self, *args, **kwargs):
+        super().delete(*args, **kwargs)
+        self.book.save()
+
+    def __str__(self):
+        return f"{self.user.username} reserved {self.book.title}"

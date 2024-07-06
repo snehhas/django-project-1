@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import BookForm, Book, BorrowedBook
+from .models import BookForm, Book, BorrowedBook, Reservation
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
@@ -82,3 +82,59 @@ def return_book(request, borrowed_book_id):
         messages.success(request, f'You have returned "{book.title}"')
     
     return redirect('borrowed_books_list')
+
+@login_required
+def reserve_book(request, book_id):
+    book = get_object_or_404(Book, pk=book_id)
+
+    # Check if the user has already reserved this book
+    existing_reservation = Reservation.objects.filter(user=request.user, book=book).exists()
+
+    if existing_reservation:
+        # Handle case where user has already reserved the book
+        # You may want to redirect with a message indicating that the book is already reserved
+        return redirect('book_list')
+
+    # Create a new reservation
+    reservation = Reservation(user=request.user, book=book)
+    reservation.save()
+
+    # Update the book's is_reserved field
+    book.is_reserved = True
+    book.save()
+
+    return redirect('book_list')
+
+@login_required
+def reserve_view(request):
+    reservations = Reservation.objects.all()
+    return render(request, 'books/reserve.html', {'reservations': reservations})
+
+def loan_book(request, reservation_id):
+    if request.method == 'POST':
+        reservation = get_object_or_404(Reservation, pk=reservation_id)
+        
+        # Perform actions to loan the book
+        try:
+            book = reservation.book
+            
+            # Create a record in borrowed books
+            borrowed_book = BorrowedBook(user=request.user, book=book)
+            borrowed_book.save()
+            
+            # Remove the reservation
+            reservation.delete()
+            
+            # Update book availability (if needed)
+            book.copies_available -= 1
+            book.save()
+            
+            messages.success(request, f'You have successfully loaned {book.title}.')
+            return redirect('borrowed_books_list')
+        
+        except Exception as e:
+            messages.error(request, f'Error loaning the book: {e}')
+            return redirect('reserve_view')
+    
+    # Handle other HTTP methods or invalid scenarios
+    return redirect('reserve_view')
