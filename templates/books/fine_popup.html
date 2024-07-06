@@ -1,0 +1,13 @@
+<!-- templates/books/fine_popup.html -->
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="alert alert-warning" role="alert">
+        Your book return is overdue!
+        <br>
+        Fine Amount: Rs. {{ fine_amount }}
+    </div>
+    <a href="{% url 'borrowed_books_list' %}" class="btn btn-primary">OK</a>
+</div>
+{% endblock %}

@@ -1,6 +1,7 @@
 from django.db import models
 from django import forms
 from django.contrib.auth.models import User
+from datetime import timedelta, datetime
 
 class Book(models.Model):
     title = models.CharField(max_length=255)
@@ -19,6 +20,13 @@ class BorrowedBook(models.Model):
     book = models.ForeignKey(Book, on_delete=models.CASCADE)
     borrowed_date = models.DateTimeField(auto_now_add=True)
     returned_date = models.DateTimeField(null=True, blank=True)
+
+    def save(self, *args, **kwargs):
+        if not self.borrowed_date:
+            self.borrowed_date = datetime.now()
+        if not self.returned_date:
+            self.returned_date = self.borrowed_date + timedelta(weeks=1)
+        super(BorrowedBook, self).save(*args, **kwargs)
 
     def __str__(self):
         return f"{self.user.username} borrowed {self.book.title}"
