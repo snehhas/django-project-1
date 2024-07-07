@@ -49,10 +49,8 @@ def borrow_book(request, book_id):
             # Update copies_available count
             book.copies_available -= 1
             book.save()
-
-            messages.success(request, f'You have borrowed "{book.title}"')
         else:
-            messages.error(request, f'Sorry, "{book.title}" is currently not available for loan.')
+            pass
 
     return redirect('book_list')
 
@@ -78,7 +76,7 @@ def return_book(request, borrowed_book_id):
         borrowed_book = get_object_or_404(BorrowedBook, id=borrowed_book_id)
         borrowed_book.delete()
 
-        messages.success(request, f'You have returned "{book.title}"')
+        # messages.success(request, f'You have returned "{book.title}"')
     
     return redirect('borrowed_books_list')
 
@@ -135,7 +133,7 @@ def loan_book(request, reservation_id):
                 book.copies_available -= 1
                 book.save()
             
-            messages.success(request, f'You have successfully loaned {book.title}.')
+            # messages.success(request, f'You have successfully loaned {book.title}.')
             return redirect('borrowed_books_list')
         
         except Exception as e:
