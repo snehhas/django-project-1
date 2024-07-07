@@ -60,12 +60,14 @@ class BorrowedBook(models.Model):
 class Reservation(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     book = models.ForeignKey(Book, on_delete=models.CASCADE)
+    book_title = models.CharField(max_length=255, default='') 
     reserved_date = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         unique_together = ('user', 'book')
 
     def save(self, *args, **kwargs):
+        self.book_title = self.book.title  # Set the book title
         super().save(*args, **kwargs)
         self.book.save()
 

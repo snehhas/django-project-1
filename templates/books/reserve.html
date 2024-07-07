@@ -50,6 +50,7 @@
         <thead>
           <tr>
             <th scope="col">Book ID</th>
+            <th scope="col">Book Title</th>
             <th scope="col">Reserved Date</th>
             <th scope="col">Action</th>
           </tr>
@@ -58,6 +59,7 @@
           {% for reservation in reservations %}
           <tr>
             <td>{{ reservation.book_id }}</td>
+            <td>{{ reservation.book_title }}</td>
             <td>{{ reservation.reserved_date }}</td>
             <td>
               {% if reservation.user_id == request.user.id %}
