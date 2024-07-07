@@ -7,40 +7,40 @@
 
 {% block content %}
 
-  <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <div class="container-fluid">
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <div class="container-fluid">
       <a class="navbar-brand" href="{% url 'home' %}"><b>LMS Portal</b></a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
+          <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-          <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="{% url 'user_list' %}">Members</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Books</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="{% url 'borrowed_books_list' %}">Return Book</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="{% url 'reserve_view' %}">Reservation</a>
-          </li>
-        </ul>
-        <form class="d-flex" method="GET" action="{% url 'book_list' %}">
-          <input class="form-control me-2" type="search" name="q" placeholder="Search by Title" aria-label="Search" value="{{ query|default_if_none:"" }}">
-          <button class="btn btn-outline-success" type="submit">Search</button>
-          {% if query %}
-          <button class="btn btn-outline-secondary btn-sm"><a href="{% url 'book_list' %}">Clear Search</a></button>
-          {% endif %}
-        </form>
-        <ul class="nav navbar-nav navbar-right">
-          <li><a href="{% url 'logout' %}">Logout</a></li>
-        </ul>
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+              <li class="nav-item">
+                  <a class="nav-link {% if request.resolver_match.url_name == 'user_list' %}active{% endif %}" aria-current="page" href="{% url 'user_list' %}">Members</a>
+              </li>
+              <li class="nav-item">
+                  <a class="nav-link {% if request.resolver_match.url_name == 'book_list' %}active{% endif %}" href="{% url 'book_list' %}">Books</a>
+              </li>
+              <li class="nav-item">
+                  <a class="nav-link {% if request.resolver_match.url_name == 'borrowed_books_list' %}active{% endif %}" href="{% url 'borrowed_books_list' %}">Return Book</a>
+              </li>
+              <li class="nav-item">
+                  <a class="nav-link {% if request.resolver_match.url_name == 'reserve_view' %}active{% endif %}" href="{% url 'reserve_view' %}">Reservation</a>
+              </li>
+          </ul>
+          <form class="d-flex" method="GET" action="{% url 'book_list' %}">
+              <input class="form-control me-2" type="search" name="q" placeholder="Search by Title" aria-label="Search" value="{{ query|default_if_none:"" }}">
+              <button class="btn btn-outline-success" type="submit">Search</button>
+              {% if query %}
+                  <button class="btn btn-outline-secondary btn-sm"><a href="{% url 'book_list' %}">Clear Search</a></button>
+              {% endif %}
+          </form>
+          <ul class="nav navbar-nav navbar-right">
+              <li><a href="{% url 'logout' %}">Logout</a></li>
+          </ul>
       </div>
-    </div>
-  </nav>
+  </div>
+</nav>
 
   <div class="container mt-4">
   <div class="mt-4">
