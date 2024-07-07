@@ -4,6 +4,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
 
+@login_required
 def book_list(request):
     query = request.GET.get('q')
     if query:
@@ -12,6 +13,7 @@ def book_list(request):
         books = Book.objects.all()
     return render(request, 'books/book_list.html', {'books': books, 'query': query})
 
+@login_required
 def book_add(request):
     if request.method == 'POST':
         form = BookForm(request.POST)
@@ -22,6 +24,7 @@ def book_add(request):
         form = BookForm()
     return render(request, 'books/book_form.html', {'form': form})
 
+@login_required
 def book_edit(request, pk):
     book = get_object_or_404(Book, pk=pk)
     if request.method == 'POST':
@@ -33,6 +36,7 @@ def book_edit(request, pk):
         form = BookForm(instance=book)
     return render(request, 'books/book_form.html', {'form': form})
 
+@login_required
 def borrow_book(request, book_id):
     book = get_object_or_404(Book, pk=book_id)
 
@@ -63,6 +67,7 @@ def return_book(request, borrowed_book_id):
     borrowed_book.delete()
     return redirect('borrowed_books_list')
 
+@login_required
 def return_book(request, borrowed_book_id):
     borrowed_book = get_object_or_404(BorrowedBook, pk=borrowed_book_id)
     book = borrowed_book.book
@@ -110,6 +115,7 @@ def reserve_view(request):
     reservations = Reservation.objects.all()
     return render(request, 'books/reserve.html', {'reservations': reservations})
 
+@login_required
 def loan_book(request, reservation_id):
     if request.method == 'POST':
         reservation = get_object_or_404(Reservation, pk=reservation_id)
