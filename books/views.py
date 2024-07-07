@@ -63,12 +63,6 @@ def borrowed_books_list(request):
 
 @login_required
 def return_book(request, borrowed_book_id):
-    borrowed_book = get_object_or_404(BorrowedBook, id=borrowed_book_id)
-    borrowed_book.delete()
-    return redirect('borrowed_books_list')
-
-@login_required
-def return_book(request, borrowed_book_id):
     borrowed_book = get_object_or_404(BorrowedBook, pk=borrowed_book_id)
     book = borrowed_book.book
     
@@ -102,6 +96,7 @@ def reserve_book(request, book_id):
 
     # Create a new reservation
     reservation = Reservation(user=request.user, book=book)
+    reservation.book_title = book.title  # Set the book title
     reservation.save()
 
     # Update the book's is_reserved field
@@ -119,6 +114,7 @@ def reserve_view(request):
 def loan_book(request, reservation_id):
     if request.method == 'POST':
         reservation = get_object_or_404(Reservation, pk=reservation_id)
+        book = get_object_or_404(Book, pk=reservation.book_id)
         
         # Perform actions to loan the book
         try:
@@ -130,10 +126,14 @@ def loan_book(request, reservation_id):
             
             # Remove the reservation
             reservation.delete()
+
+            book.is_reserved = False
+            book.save()
             
             # Update book availability (if needed)
-            book.copies_available -= 1
-            book.save()
+            if book.copies_available > 0:
+                book.copies_available -= 1
+                book.save()
             
             messages.success(request, f'You have successfully loaned {book.title}.')
             return redirect('borrowed_books_list')
