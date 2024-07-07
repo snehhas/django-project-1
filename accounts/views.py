@@ -6,7 +6,6 @@ from .models import Member
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 
-@login_required
 def register(request):
     if request.method == 'POST':
         form = UserCreationForm(request.POST)
