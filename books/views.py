@@ -25,6 +25,14 @@ def book_add(request):
     return render(request, 'books/book_form.html', {'form': form})
 
 @login_required
+def delete_book(request, pk):
+    book = get_object_or_404(Book, pk=pk)
+    if request.method == 'POST':
+        book.delete()
+        return redirect('book_list')
+    return render(request, 'books/book_confirm_delete.html', {'book': book})
+
+@login_required
 def book_edit(request, pk):
     book = get_object_or_404(Book, pk=pk)
     if request.method == 'POST':
@@ -41,12 +49,8 @@ def borrow_book(request, book_id):
     book = get_object_or_404(Book, pk=book_id)
 
     if request.method == 'POST':
-        # Check if there are available copies to borrow
         if book.copies_available > 0:
-            # Create a BorrowedBook instance
             BorrowedBook.objects.create(user=request.user, book=book)
-            
-            # Update copies_available count
             book.copies_available -= 1
             book.save()
         else:
@@ -65,18 +69,14 @@ def return_book(request, borrowed_book_id):
     book = borrowed_book.book
     
     if request.method == 'POST':
-        # Update returned_date for the BorrowedBook instance
         borrowed_book.returned_date = timezone.now()
         borrowed_book.save()
 
-        # Increase copies_available count for the returned book
         book.copies_available += 1
         book.save()
 
         borrowed_book = get_object_or_404(BorrowedBook, id=borrowed_book_id)
         borrowed_book.delete()
-
-        # messages.success(request, f'You have returned "{book.title}"')
     
     return redirect('borrowed_books_list')
 
@@ -84,22 +84,17 @@ def return_book(request, borrowed_book_id):
 def reserve_book(request, book_id):
     book = get_object_or_404(Book, pk=book_id)
 
-    # Check if the user has already reserved this book
     existing_reservation = Reservation.objects.filter(user=request.user, book=book).exists()
 
     if existing_reservation:
-        # Handle case where user has already reserved the book
-        # You may want to redirect with a message indicating that the book is already reserved
         return redirect('book_list')
 
-    # Create a new reservation
     reservation = Reservation(user=request.user, book=book)
-    reservation.book_title = book.title  # Set the book title
+    reservation.book_title = book.title
     reservation.save()
 
-    # Update the book's is_reserved field
-    book.is_reserved = True
-    book.save()
+    # book.is_reserved = True
+    # book.save()
 
     return redirect('book_list')
 
@@ -114,31 +109,25 @@ def loan_book(request, reservation_id):
         reservation = get_object_or_404(Reservation, pk=reservation_id)
         book = get_object_or_404(Book, pk=reservation.book_id)
         
-        # Perform actions to loan the book
         try:
             book = reservation.book
             
-            # Create a record in borrowed books
             borrowed_book = BorrowedBook(user=request.user, book=book)
             borrowed_book.save()
             
-            # Remove the reservation
             reservation.delete()
 
             book.is_reserved = False
             book.save()
             
-            # Update book availability (if needed)
             if book.copies_available > 0:
                 book.copies_available -= 1
                 book.save()
-            
-            # messages.success(request, f'You have successfully loaned {book.title}.')
+
             return redirect('borrowed_books_list')
         
         except Exception as e:
             messages.error(request, f'Error loaning the book: {e}')
             return redirect('reserve_view')
     
-    # Handle other HTTP methods or invalid scenarios
     return redirect('reserve_view')
