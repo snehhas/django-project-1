@@ -33,6 +33,18 @@ def delete_book(request, pk):
     return render(request, 'books/book_confirm_delete.html', {'book': book})
 
 @login_required
+def book_update(request, pk):
+    book = get_object_or_404(Book, pk=pk)
+    if request.method == 'POST':
+        form = BookForm(request.POST, instance=book)
+        if form.is_valid():
+            form.save()
+            return redirect('book_list')
+    else:
+        form = BookForm(instance=book)
+    return render(request, 'books/book_form.html', {'form': form})
+
+@login_required
 def book_edit(request, pk):
     book = get_object_or_404(Book, pk=pk)
     if request.method == 'POST':
