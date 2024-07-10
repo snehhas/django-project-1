@@ -10,7 +10,6 @@ class UserRegisterForm(UserCreationForm):
         fields = ['username', 'email', 'password1', 'password2']
 
     def clean_password2(self):
-        # Custom password validation: minimum length of 8 characters
         password2 = self.cleaned_data.get('password2')
         if len(password2) < 8:
             raise forms.ValidationError("Password must be at least 8 characters long.")

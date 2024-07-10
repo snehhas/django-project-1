@@ -11,5 +11,5 @@ urlpatterns = [
     path('books/reserve/<int:book_id>/', views.reserve_book, name='reserve_book'),
     path('reserve/', views.reserve_view, name='reserve_view'),
     path('loan-book/<int:reservation_id>/', views.loan_book, name='loan_book'),
-    # Add more URLs as needed
+    path('<int:pk>/delete/', views.delete_book, name='delete_book'),
 ]

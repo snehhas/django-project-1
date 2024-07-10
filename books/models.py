@@ -14,7 +14,6 @@ class Book(models.Model):
 
     def __str__(self):
         return self.title
-    # Add more fields as needed
 
 class BookForm(forms.ModelForm):
     class Meta:
@@ -47,7 +46,7 @@ class BorrowedBook(models.Model):
     @property
     def calculate_fine(self):
         if self.is_overdue:
-            # Calculate fine amount (e.g., Rs. 5 per day)
+            # Calculate fine amount (e.g. Rs. 5 per day)
             overdue_days = (timezone.now() - (self.borrowed_date + timezone.timedelta(days=7))).days
             fine_amount = overdue_days * 5  # Rs. 5 per day
             if fine_amount > 0:
@@ -55,7 +54,7 @@ class BorrowedBook(models.Model):
             else:
                 return 0
         else:
-            return 0  # No fine if not overdue
+            return 0  # No fine
         
 class Reservation(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -67,7 +66,7 @@ class Reservation(models.Model):
         unique_together = ('user', 'book')
 
     def save(self, *args, **kwargs):
-        self.book_title = self.book.title  # Set the book title
+        self.book_title = self.book.title
         super().save(*args, **kwargs)
         self.book.save()
 

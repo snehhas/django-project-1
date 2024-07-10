@@ -41,7 +41,6 @@
   </div>
 </nav>
 
-
 <div class="container mt-4">
   <h1>Book Inventory</h1>
 
@@ -55,6 +54,7 @@
         <th>ISBN</th>
         <th>Action</th>
         <th>Reserve</th>
+        <th>Delete</th>
       </tr>
     </thead>
     <tbody>
@@ -88,15 +88,21 @@
               </form>
             {% endif %}
           </td>
+          <td>
+            <form action="{% url 'delete_book' book.pk %}" method="post">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-danger">Delete</button>
+            </form>
+          </td>
         </tr>
         {% empty %}
         <tr>
-          <td colspan="5">No books found.</td>
+          <td colspan="8">No books found.</td>
         </tr>
         {% endfor %}
       {% else %}
       <tr>
-        <td colspan="5">No books found.</td>
+        <td colspan="8">No books found.</td>
       </tr>
       {% endif %}
     </tbody>
