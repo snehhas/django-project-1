@@ -28,13 +28,6 @@
                   <a class="nav-link {% if request.resolver_match.url_name == 'reserve_view' %}active{% endif %}" href="{% url 'reserve_view' %}">Reservation</a>
               </li>
           </ul>
-          <form class="d-flex" method="GET" action="{% url 'book_list' %}">
-              <input class="form-control me-2" type="search" name="q" placeholder="Search by Title" aria-label="Search" value="{{ query|default_if_none:"" }}">
-              <button class="btn btn-outline-success" type="submit">Search</button>
-              {% if query %}
-                  <button class="btn btn-outline-secondary btn-sm"><a href="{% url 'book_list' %}">Clear Search</a></button>
-              {% endif %}
-          </form>
           <ul class="nav navbar-nav navbar-right">
               <li><a href="{% url 'logout' %}">Logout</a></li>
           </ul>
