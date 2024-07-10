@@ -8,7 +8,7 @@
 {% block content %}
 <div class="container mt-4">
   <h1>Confirm Delete</h1>
-  <p>Are you sure you want to delete the book titled "{{ book.title }}"?</p>
+  <p>Are you sure you want to delete the book "{{ book.title }}"?</p>
   <form method="post">
     {% csrf_token %}
     <button type="submit" class="btn btn-danger">Delete</button>
