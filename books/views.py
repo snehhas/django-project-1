@@ -16,12 +16,24 @@ def book_list(request):
 @login_required
 def book_add(request):
     if request.method == 'POST':
-        form = BookForm(request.POST)
+        form = BookForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()
             return redirect('book_list')
     else:
         form = BookForm()
+    return render(request, 'books/book_form.html', {'form': form})
+
+@login_required
+def book_update(request, pk):
+    book = get_object_or_404(Book, pk=pk)
+    if request.method == 'POST':
+        form = BookForm(request.POST, request.FILES, instance=book)
+        if form.is_valid():
+            form.save()
+            return redirect('book_list')
+    else:
+        form = BookForm(instance=book)
     return render(request, 'books/book_form.html', {'form': form})
 
 @login_required
@@ -31,18 +43,6 @@ def delete_book(request, pk):
         book.delete()
         return redirect('book_list')
     return render(request, 'books/book_confirm_delete.html', {'book': book})
-
-@login_required
-def book_update(request, pk):
-    book = get_object_or_404(Book, pk=pk)
-    if request.method == 'POST':
-        form = BookForm(request.POST, instance=book)
-        if form.is_valid():
-            form.save()
-            return redirect('book_list')
-    else:
-        form = BookForm(instance=book)
-    return render(request, 'books/book_form.html', {'form': form})
 
 @login_required
 def book_edit(request, pk):
@@ -109,6 +109,13 @@ def reserve_book(request, book_id):
     # book.save()
 
     return redirect('book_list')
+
+@login_required
+def cancel_reservation(request, reservation_id):
+    reservation = get_object_or_404(Reservation, pk=reservation_id, user=request.user)
+    reservation.delete()
+    messages.success(request, 'Reservation has been cancelled.')
+    return redirect('reserve_view')
 
 @login_required
 def reserve_view(request):
