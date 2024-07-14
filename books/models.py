@@ -5,12 +5,12 @@ from datetime import timedelta, datetime
 from django.utils import timezone
 
 class Book(models.Model):
-    title = models.CharField(max_length=255)
-    author = models.CharField(max_length=255)
+    title = models.CharField(max_length=200)
+    author = models.CharField(max_length=200)
     published_date = models.DateField()
     isbn = models.CharField(max_length=13)
-    copies_available = models.IntegerField(default=5)
-    is_reserved = models.BooleanField(default=False)
+    cover_image = models.ImageField(upload_to='book_covers/', blank=True, null=True)
+    copies_available = models.IntegerField(default=1)
 
     def __str__(self):
         return self.title
@@ -18,7 +18,7 @@ class Book(models.Model):
 class BookForm(forms.ModelForm):
     class Meta:
         model = Book
-        fields = ['title', 'author', 'published_date', 'isbn']
+        fields = ['title', 'author', 'published_date', 'isbn', 'cover_image']
 
 class BorrowedBook(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)

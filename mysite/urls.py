@@ -16,6 +16,8 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from django.views.generic.base import TemplateView
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     path('accounts/', include('django.contrib.auth.urls')),
@@ -24,3 +26,6 @@ urlpatterns = [
     path('books/', include('books.urls')),
     path('register/', include('accounts.urls')),
 ]
+
+if settings.DEBUG:
+    urlpatterns += static('/book_covers/', document_root=settings.BOOK_COVERS_ROOT)

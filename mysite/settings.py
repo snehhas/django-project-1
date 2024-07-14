@@ -126,3 +126,5 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
 ]
+
+BOOK_COVERS_ROOT = os.path.join(BASE_DIR, 'book_covers')

@@ -1,4 +1,3 @@
-<!-- templates/books/reserve.html -->
 {% extends 'base.html' %}
 
 {% block title %}
@@ -35,41 +34,59 @@
   </div>
 </nav>
 
-  <div class="container mt-4">
-  <div class="mt-4">
-    <h2>Reserved Books</h2>
-    <div class="table-responsive">
-      <table class="table table-striped table-hover">
-        <thead>
-          <tr>
-            <th scope="col">Book ID</th>
-            <th scope="col">Book Title</th>
-            <th scope="col">Reserved Date</th>
-            <th scope="col">Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for reservation in reservations %}
-          <tr>
-            <td>{{ reservation.book_id }}</td>
-            <td>{{ reservation.book_title }}</td>
-            <td>{{ reservation.reserved_date }}</td>
-            <td>
-              {% if reservation.user_id == request.user.id %}
-              <form action="{% url 'loan_book' reservation.pk %}" method="post">
-                {% csrf_token %}
-                <input type="hidden" name="reservation_id" value="{{ reservation.pk }}">
-                <button type="submit" class="btn btn-primary">Loan</button>
-              </form>
-              {% else %}
-              <span class="text-muted">Not allowed</span>
-              {% endif %}
-            </td>
-          </tr>
-          {% endfor %}
-        </tbody>
-      </table>
-    </div>
+<div class="container mt-4">
+  <h2>Reserved Books</h2>
+  <div class="table-responsive">
+    <table class="table table-striped table-hover">
+      <thead>
+        <tr>
+          <th scope="col">Book ID</th>
+          <th scope="col">Book Image</th>
+          <th scope="col">Book Title</th>
+          <th scope="col">Reserved Date</th>
+          <th scope="col">Accept</th>
+          <th scope="col">Cancel</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for reservation in reservations %}
+        <tr>
+          <td>{{ reservation.book_id }}</td>
+          <td>
+            {% if reservation.book.cover_image %}
+              <img src="{{ reservation.book.cover_image.url }}" alt="{{ reservation.book.title }}" style="height: 100px;">
+            {% else %}
+              No image available
+            {% endif %}
+          </td>
+          <td>{{ reservation.book_title }}</td>
+          <td>{{ reservation.reserved_date }}</td>
+          <td>
+            {% if reservation.user_id == request.user.id %}
+            <form action="{% url 'loan_book' reservation.pk %}" method="post">
+              {% csrf_token %}
+              <input type="hidden" name="reservation_id" value="{{ reservation.pk }}">
+              <button type="submit" class="btn btn-primary">Accept</button>
+            </form>
+            {% else %}
+            <span class="text-muted">Not allowed</span>
+            {% endif %}
+          </td>
+          <td>
+            {% if reservation.user_id == request.user.id %}
+            <form action="{% url 'cancel_reservation' reservation.pk %}" method="post">
+              {% csrf_token %}
+              <input type="hidden" name="reservation_id" value="{{ reservation.pk }}">
+              <button type="submit" class="btn btn-danger">Cancel</button>
+            </form>
+            {% else %}
+            <span class="text-muted">Not allowed</span>
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
   </div>
 </div>
 {% endblock %}

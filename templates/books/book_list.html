@@ -48,6 +48,7 @@
     <thead>
       <tr>
         <th>Title</th>
+        <th>Book Image</th>
         <th>Author</th>
         <th>Published Date</th>
         <th>Copies</th>
@@ -63,6 +64,13 @@
         {% for book in books %}
         <tr>
           <td>{{ book.title }}</td>
+          <td>
+            {% if book.cover_image %}
+              <img src="{{ book.cover_image.url }}" alt="{{ book.title }}" style="height: 100px;">
+            {% else %}
+              No image available
+            {% endif %}
+          </td>
           <td>{{ book.author }}</td>
           <td>{{ book.published_date }}</td>
           <td>{{ book.copies_available }}</td>
@@ -102,12 +110,12 @@
         </tr>
         {% empty %}
         <tr>
-          <td colspan="9">No books found.</td>
+          <td colspan="10">No books found.</td>
         </tr>
         {% endfor %}
       {% else %}
       <tr>
-        <td colspan="9">No books found.</td>
+        <td colspan="10">No books found.</td>
       </tr>
       {% endif %}
     </tbody>
